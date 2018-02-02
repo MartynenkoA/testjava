@@ -3,6 +3,7 @@ package com.example.demo.service;
 import com.example.demo.dao.ClientDao;
 import com.example.demo.model.Client;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -19,20 +20,22 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     @Transactional
-    public void addClient(Client client) {
+    public Client addClient(Client client) {
         this.clientDao.addClient(client);
+        return client;
     }
 
     @Override
     @Transactional
-    public void updateClient(Client client) {
+    public Client updateClient(Client client) {
         this.clientDao.updateClient(client);
+        return client;
     }
 
     @Override
     @Transactional
-    public void removeClient(int id) {
-        this.clientDao.removeClient(id);
+    public void removeClient(Client client) {
+        this.clientDao.removeClient(client);
     }
 
     @Override
