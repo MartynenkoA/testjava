@@ -40,7 +40,7 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     @Transactional
-    public Client getClientById(int id) {
+    public Client getClientById(long id) {
         return this.clientDao.getClientById(id);
     }
 

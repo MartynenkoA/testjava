@@ -1,26 +1,33 @@
 package com.example.demo.model;
 
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+
+import org.hibernate.annotations.Cache;
+
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
+@Cache(region="common", usage = CacheConcurrencyStrategy.READ_WRITE)  // or @Cacheable(true) for JPA
+@Getter
+@Setter
 @Table(name = "client")
-public class Client {
+public class Client implements Serializable {
     @Id
-    @Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private long id;
 
-    @Column(name = "Name")
     private String Name;
 
-    @Column(name = "Address")
     private String Address;
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 

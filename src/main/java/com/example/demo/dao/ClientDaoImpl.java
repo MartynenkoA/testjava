@@ -1,15 +1,21 @@
 package com.example.demo.dao;
 
 import com.example.demo.model.Client;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 
 @Repository
+@Slf4j
+@Transactional
 public class ClientDaoImpl implements ClientDao {
     private static final Logger logger = LoggerFactory.getLogger(ClientDaoImpl.class);
 
@@ -37,7 +43,7 @@ public class ClientDaoImpl implements ClientDao {
     }
 
     @Override
-    public Client getClientById(int id) {
+    public Client getClientById(long id) {
         Client client = null;
         try{
             client = entityManager
