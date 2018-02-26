@@ -133,6 +133,11 @@
 			<artifactId>spring-orm</artifactId>
 			<version>5.0.3.RELEASE</version>
 		</dependency>
+		<dependency>
+			<groupId>com.vladmihalcea</groupId>
+			<artifactId>hibernate-types-52</artifactId>
+			<version>1.2.0</version>
+		</dependency>
 	</dependencies>
 
 	<build>

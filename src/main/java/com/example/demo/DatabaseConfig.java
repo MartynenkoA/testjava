@@ -2,9 +2,13 @@ package com.example.demo;
 
 import java.util.Properties;
 
+import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
+import org.hibernate.MultiTenancyStrategy;
 import org.hibernate.cfg.Environment;
+import org.hibernate.context.spi.CurrentTenantIdentifierResolver;
+import org.hibernate.engine.jdbc.connections.spi.MultiTenantConnectionProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,11 +28,11 @@ public class DatabaseConfig {
     @Autowired
     private org.springframework.core.env.Environment  env;
 
-    @Autowired
-    private DataSource dataSource;
+//    @Autowired
+//    private DataSource dataSource;
 
-    @Autowired
-    private LocalContainerEntityManagerFactoryBean entityManagerFactory;
+//    @Autowired
+//    private LocalContainerEntityManagerFactoryBean entityManagerFactory;
 
     /**
      * DataSource definition for database connection. Settings are read from
@@ -48,7 +52,11 @@ public class DatabaseConfig {
      * Declare the JPA entity manager factory.
      */
     @Bean
-    public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory(
+            DataSource dataSource
+//           MultiTenantConnectionProvider multiTenantConnectionProvider,
+//           CurrentTenantIdentifierResolver tenantIdentifierResolver
+) {
         LocalContainerEntityManagerFactoryBean entityManagerFactory =
                 new LocalContainerEntityManagerFactoryBean();
 
@@ -74,17 +82,22 @@ public class DatabaseConfig {
                 "hibernate.hbm2ddl.auto",
                 env.getProperty("hibernate.hbm2ddl.auto"));
         // Secondary Cache
-        additionalProperties.put(Environment.USE_SECOND_LEVEL_CACHE, true);
-        additionalProperties.put(Environment.USE_QUERY_CACHE, true);
-        additionalProperties.put(Environment.CACHE_REGION_FACTORY, org.hibernate.cache.redis.hibernate52.SingletonRedisRegionFactory.class.getName());
-        additionalProperties.put(Environment.CACHE_REGION_PREFIX, "hibernate");
+        additionalProperties.put(Environment.USE_SECOND_LEVEL_CACHE, false);
+//        additionalProperties.put(org.hibernate.cfg.Environment.MULTI_TENANT, MultiTenancyStrategy.DISCRIMINATOR);
+//        additionalProperties.put(org.hibernate.cfg.Environment.MULTI_TENANT_CONNECTION_PROVIDER, multiTenantConnectionProvider);
+//        additionalProperties.put(org.hibernate.cfg.Environment.MULTI_TENANT_IDENTIFIER_RESOLVER, tenantIdentifierResolver);
+        additionalProperties.put(org.hibernate.cfg.Environment.FORMAT_SQL, true);
 
-// Optional setting for second level cache statistics
-        additionalProperties.setProperty(Environment.GENERATE_STATISTICS, "true");
-        additionalProperties.setProperty(Environment.USE_STRUCTURED_CACHE, "true");
-
-// Configuration for Redis that used by hibernate
-        additionalProperties.put(Environment.CACHE_PROVIDER_CONFIG, "hibernate-redis.properties");
+        //        additionalProperties.put(Environment.USE_QUERY_CACHE, true);
+//        additionalProperties.put(Environment.CACHE_REGION_FACTORY, org.hibernate.cache.redis.hibernate52.SingletonRedisRegionFactory.class.getName());
+//        additionalProperties.put(Environment.CACHE_REGION_PREFIX, "hibernate");
+//
+//// Optional setting for second level cache statistics
+//        additionalProperties.setProperty(Environment.GENERATE_STATISTICS, "true");
+//        additionalProperties.setProperty(Environment.USE_STRUCTURED_CACHE, "true");
+//
+//// Configuration for Redis that used by hibernate
+//        additionalProperties.put(Environment.CACHE_PROVIDER_CONFIG, "hibernate-redis.properties");
         entityManagerFactory.setJpaProperties(additionalProperties);
 
         return entityManagerFactory;
@@ -94,11 +107,9 @@ public class DatabaseConfig {
      * Declare the transaction manager.
      */
     @Bean
-    public JpaTransactionManager transactionManager() {
-        JpaTransactionManager transactionManager =
-                new JpaTransactionManager();
-        transactionManager.setEntityManagerFactory(
-                entityManagerFactory.getObject());
+    public JpaTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
+        JpaTransactionManager transactionManager = new JpaTransactionManager();
+        transactionManager.setEntityManagerFactory(entityManagerFactory);
         return transactionManager;
     }
 
