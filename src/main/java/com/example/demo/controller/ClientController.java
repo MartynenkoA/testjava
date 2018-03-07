@@ -79,38 +79,38 @@ public class ClientController {
         return "Client successfully updated.";
     }
 
-    @RequestMapping(value="/getRedisClientName")
-    public String getRedisClientName(){
-        String userId = getUserId();
-        userKey = new UserKey(userId);
-        String result = "";
-        try (Jedis jedis = JedisFactory.getInstance().getJedisPool().getResource()){
-//            jedis.set("client:1:name", "client1");
-//            jedis.set("client:2:name", "client2");
-//            jedis.set("client:1:address:1", "client_1_address_1");
-//            jedis.set("client:2:address:1", "client_2_address_1");
-//            jedis.set("client:2:address:2", "client_2_address_2");
-            result = jedis.get(userKey.getClientName());
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-
-        return result;
-    }
-
-    @RequestMapping(value="/getRedisClientAddressById")
-    public String getRedisClientAddressById(@RequestParam("id") int id){
-        String userId = getUserId();
-        userKey = new UserKey(userId);
-        String result = "";
-        try (Jedis jedis = JedisFactory.getInstance().getJedisPool().getResource()){
-            result = jedis.get(userKey.getAddressById(id));
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-
-        return result;
-    }
+//    @RequestMapping(value="/getRedisClientName")
+//    public String getRedisClientName(){
+//        String userId = getUserId();
+//        userKey = new UserKey(userId);
+//        String result = "";
+//        try (Jedis jedis = JedisFactory.getInstance().getJedisPool().getResource()){
+////            jedis.set("client:1:name", "client1");
+////            jedis.set("client:2:name", "client2");
+////            jedis.set("client:1:address:1", "client_1_address_1");
+////            jedis.set("client:2:address:1", "client_2_address_1");
+////            jedis.set("client:2:address:2", "client_2_address_2");
+//            result = jedis.get(userKey.getClientName());
+//        } catch (URISyntaxException e) {
+//            e.printStackTrace();
+//        }
+//
+//        return result;
+//    }
+//
+//    @RequestMapping(value="/getRedisClientAddressById")
+//    public String getRedisClientAddressById(@RequestParam("id") int id){
+//        String userId = getUserId();
+//        userKey = new UserKey(userId);
+//        String result = "";
+//        try (Jedis jedis = JedisFactory.getInstance().getJedisPool().getResource()){
+//            result = jedis.get(userKey.getAddressById(id));
+//        } catch (URISyntaxException e) {
+//            e.printStackTrace();
+//        }
+//
+//        return result;
+//    }
 
     private String getUserId() {
         return request.getHeader("userId");
